@@ -7,12 +7,12 @@ export default defineConfig(({ mode }) => {
   
   return {
     plugins: [react()],
-    base: './', // Vital para GitHub Pages
+    base: './', // Vital para que funcione en subdirectorios de GitHub Pages
     define: {
-      // Inyección segura de la API KEY. Si no existe, usamos una cadena vacía para que no rompa el build.
-      'process.env.API_KEY': JSON.stringify(env.API_KEY || ''),
-      // Polyfill simple para process.env
-      'process.env': JSON.stringify({ API_KEY: env.API_KEY || '' }),
+      // Definimos process.env para que no rompa en el navegador
+      'process.env': JSON.stringify({
+        API_KEY: env.API_KEY || ''
+      }),
     },
     build: {
       outDir: 'dist',
