@@ -2,7 +2,7 @@
   "name": "registros-atrevete",
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://atrvt.github.io/Atrvt_26/",
+  "homepage": "https://atrvt26ya.vercel.app",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
