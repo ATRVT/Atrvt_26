@@ -14,15 +14,15 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "lucide-react": "^0.300.0",
-    "@google/genai": "^0.1.0" // <-- ¡VERIFICA ESTA LÍNEA! No estaba en tu captura.
+    "@google/genai": "^0.1.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.24", // <-- ¡VERIFICA ESTA LÍNEA!
+    "@types/node": "^20.11.24",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.2.1",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "gh-pages": "^6.1.1"
-  } // <-- ¡NO HAY COMA AQUÍ!
+  }
 }
