@@ -8,27 +8,20 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     
-    // ESTA LÍNEA DEBE ESTAR ASÍ:
-    base: '/Atrvt_26/',
+    // 1. Configuración de GitHub Pages (la ruta correcta)
+    base: '/Atrvt_26/', 
     
     define: {
+      // Definición segura para evitar errores de librerías que busquen process.env
       'process.env': {
         NODE_ENV: JSON.stringify(mode),
-        // Esto mantiene la configuración de tu API Key
-        API_KEY: JSON.stringify(env.API_KEY || '') 
+        API_KEY: JSON.stringify(env.API_KEY || '')
       }
-    },
-    // ... cualquier otra configuración que tuvieras
-  };
-});
+    }, // <-- ¡ASEGÚRATE DE QUE HAYA UNA COMA AQUÍ!
+    
+    // 2. Si quieres especificar la carpeta de salida (opcional, por defecto es 'dist')
     build: {
       outDir: 'dist',
-      sourcemap: false,
-      rollupOptions: {
-        output: {
-          manualChunks: undefined
-        }
-      }
     }
   };
 });
