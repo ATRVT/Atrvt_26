@@ -4,12 +4,14 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  
+
   return {
     plugins: [react()],
-    // CRUCIAL para GitHub Pages: 
-    // './' hace que busque los assets en la misma carpeta en lugar de la raíz del dominio
-    base: './', 
+    
+    // CRUCIAL para GitHub Pages:
+    // Esta es la ruta de tu repositorio
+    base: '/Atrvt_26/',
+    
     define: {
       // Definición segura para evitar errores de librerías que busquen process.env
       'process.env': {
@@ -17,6 +19,9 @@ export default defineConfig(({ mode }) => {
         API_KEY: JSON.stringify(env.API_KEY || '')
       }
     },
+    // Si tienes más configuración debajo (como 'build'), déjala tal cual.
+  };
+});
     build: {
       outDir: 'dist',
       sourcemap: false,
