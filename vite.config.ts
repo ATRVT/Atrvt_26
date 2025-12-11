@@ -7,18 +7,19 @@ export default defineConfig(({ mode }) => {
   
   return {
     plugins: [react()],
-    base: './', // CRUCIAL: Permite que la app funcione en subcarpetas (GitHub Pages)
+    // CRUCIAL para GitHub Pages: 
+    // './' hace que busque los assets en la misma carpeta en lugar de la raíz del dominio
+    base: './', 
     define: {
-      // Definimos un objeto process.env global seguro
-      'process.env': JSON.stringify({
-        API_KEY: env.API_KEY || '',
-        NODE_ENV: mode
-      }),
+      // Definición segura para evitar errores de librerías que busquen process.env
+      'process.env': {
+        NODE_ENV: JSON.stringify(mode),
+        API_KEY: JSON.stringify(env.API_KEY || '')
+      }
     },
     build: {
       outDir: 'dist',
       sourcemap: false,
-      // Aseguramos que no queden referencias colgantes
       rollupOptions: {
         output: {
           manualChunks: undefined
