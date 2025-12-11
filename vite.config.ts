@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
         NODE_ENV: JSON.stringify(mode),
         API_KEY: JSON.stringify(env.API_KEY || '')
       }
-    }, // <-- ¡ASEGÚRATE DE QUE HAYA UNA COMA AQUÍ!
+    },
     
     // 2. Si quieres especificar la carpeta de salida (opcional, por defecto es 'dist')
     build: {
