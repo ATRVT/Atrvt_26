@@ -69,7 +69,8 @@ const InputField: React.FC<InputFieldProps> = ({
           <input
             type={type}
             value={value}
-            onChange={onChange}
+            // Aseguramos que el evento sea compatible
+            onChange={(e) => onChange(e)}
             placeholder={placeholder}
             className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 focus:border-indigo-500/50 rounded-lg px-3 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/10 transition-all shadow-sm"
           />
@@ -168,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               icon={User} 
               label="Estudiante" 
               value={data.studentName} 
-              onChange={(e: any) => onUpdate('studentName', e.target.value)}
+              onChange={(e) => onUpdate('studentName', e.target.value)}
               placeholder="Seleccionar alumno..."
               options={studentOptions}
               isLoading={isLoading}
@@ -178,7 +179,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               icon={User} 
               label="Terapeuta" 
               value={data.therapistName} 
-              onChange={(e: any) => onUpdate('therapistName', e.target.value)}
+              onChange={(e) => onUpdate('therapistName', e.target.value)}
               placeholder="Seleccionar terapeuta..."
               options={therapistOptions}
               isLoading={isLoading}
@@ -189,7 +190,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               label="Fecha" 
               type="date"
               value={data.date} 
-              onChange={(e: any) => onUpdate('date', e.target.value)}
+              onChange={(e) => onUpdate('date', e.target.value)}
               extra={
                 <span className="ml-auto flex items-center gap-1 text-[10px] text-slate-500 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded-md font-medium">
                   <Clock size={10} /> {data.startTime}
