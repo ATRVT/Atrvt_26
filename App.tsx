@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
+// Asegúrate de que estos componentes existan en tu carpeta local
 import { Sidebar } from './components/Sidebar';
 import { ProgramList } from './components/ProgramList';
+import { fetchSheetConfig, saveSessionToSheet, SheetConfigData } from './services/sheetService';
 import { SessionData, ProgramData } from './types';
 import { CheckCircle, AlertCircle, X } from 'lucide-react';
-import { fetchSheetConfig, saveSessionToSheet, SheetConfigData } from './services/sheetService';
 
-// Helper to get local date string YYYY-MM-DD
-// This fixes the issue where evening sessions showed the next day's date due to UTC conversion
+// Helper para obtener fecha local YYYY-MM-DD
 const getLocalDate = () => {
   const d = new Date();
   const year = d.getFullYear();
@@ -16,11 +16,10 @@ const getLocalDate = () => {
 };
 
 const App: React.FC = () => {
-  // Initial State Setup
   const [sessionData, setSessionData] = useState<SessionData>({
     studentName: '',
     therapistName: '',
-    date: getLocalDate(), // Changed from toISOString() to fix timezone offset
+    date: getLocalDate(),
     startTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
     endTime: '',
     generalObservations: '',
@@ -33,18 +32,22 @@ const App: React.FC = () => {
   const [saveStatus, setSaveStatus] = useState<'success' | 'error' | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Load config from Sheets on mount
   useEffect(() => {
     const loadConfig = async () => {
       setIsConfigLoading(true);
-      const data = await fetchSheetConfig();
-      setConfig(data);
-      setIsConfigLoading(false);
+      try {
+        const data = await fetchSheetConfig();
+        setConfig(data);
+      } catch (error) {
+        console.error("Error cargando configuración", error);
+        // Opcional: manejar estado de error visual
+      } finally {
+        setIsConfigLoading(false);
+      }
     };
     loadConfig();
   }, []);
 
-  // Handlers
   const handleUpdateSession = (field: keyof SessionData, value: string) => {
     setSessionData(prev => ({ ...prev, [field]: value }));
   };
@@ -66,7 +69,6 @@ const App: React.FC = () => {
     };
     setSessionData(prev => ({
       ...prev,
-      // Add to END of list so they appear and save in chronological creation order
       programs: [...prev.programs, newProgram] 
     }));
   };
@@ -88,7 +90,6 @@ const App: React.FC = () => {
   };
 
   const handleSaveSession = async () => {
-    // Basic Validation
     if (!sessionData.studentName || !sessionData.therapistName) {
       alert("Por favor selecciona un estudiante y un terapeuta.");
       return;
@@ -106,33 +107,33 @@ const App: React.FC = () => {
     const endTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
     const finalData = { ...sessionData, endTime };
     
-    // Send to Sheet
-    const result = await saveSessionToSheet(finalData);
-    
-    setIsSaving(false);
-    
-    if (result.success) {
-      setSaveStatus('success');
+    try {
+      const result = await saveSessionToSheet(finalData);
       
-      // REVERTIDO: Limpiamos la lista de programas al guardar, como era originalmente.
-      setSessionData(prev => ({
-        ...prev,
-        startTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
-        endTime: '',
-        generalObservations: '',
-        programs: [] 
-      }));
-
-      setTimeout(() => setSaveStatus(null), 4000);
-    } else {
+      if (result.success) {
+        setSaveStatus('success');
+        setSessionData(prev => ({
+          ...prev,
+          startTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
+          endTime: '',
+          generalObservations: '',
+          programs: [] 
+        }));
+        setTimeout(() => setSaveStatus(null), 4000);
+      } else {
+        setSaveStatus('error');
+        setErrorMessage(result.message || 'Error desconocido');
+      }
+    } catch (e) {
       setSaveStatus('error');
-      setErrorMessage(result.message || 'Error desconocido');
+      setErrorMessage('Error de conexión o red');
+    } finally {
+      setIsSaving(false);
     }
   };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-[#F8F7FF] text-slate-900 font-sans overflow-hidden selection:bg-indigo-100">
-      
       <Sidebar 
         data={sessionData} 
         onUpdate={handleUpdateSession} 
@@ -153,7 +154,6 @@ const App: React.FC = () => {
         isLoading={isConfigLoading}
       />
 
-      {/* Toast Notification Success */}
       {saveStatus === 'success' && (
         <div className="fixed bottom-6 right-6 bg-emerald-600 text-white px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce z-50">
           <CheckCircle size={24} />
@@ -164,7 +164,6 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Toast Notification Error */}
       {saveStatus === 'error' && (
         <div className="fixed bottom-6 right-6 bg-rose-600 text-white px-6 py-4 rounded-2xl shadow-xl flex items-start gap-3 animate-fadeIn z-50 max-w-sm">
           <AlertCircle size={24} className="mt-1 flex-shrink-0" />
@@ -177,7 +176,6 @@ const App: React.FC = () => {
           </button>
         </div>
       )}
-
     </div>
   );
 };
