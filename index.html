@@ -134,7 +134,7 @@
         // Ajustado para coincidir con la lógica que usa 'IF' y 'IV'
         const REINFORCEMENT_SCHEDULES = ['FR', 'VR', 'FI', 'VI', 'Razón Continua (RC)']; 
         
-        // =================================================================
+// =================================================================
         // 3. COMPONENTE ProgramCard (Código de ProgramCard.tsx)
         // =================================================================
         const ProgramCard = ({ program, onUpdate, onRemove }) => {
@@ -147,36 +147,55 @@
                 onUpdate(program.id, { [field]: updated });
             };
 
-            // Asegurar que las variables coincidan con las que usa tu App.tsx para Intervalos
             const isIntervalSchedule = ['FI', 'VI'].includes(program.reinforcementSchedule);
 
-            const CounterInput = ({ label, value, onChange, colorClass }) => (
-                <div className="flex flex-col gap-2 w-full">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">{label}</label>
-                    <div className="relative">
-                    <input
-                        type="number"
-                        min="0"
-                        value={value === 0 ? '' : value}
-                        placeholder="0"
-                        onChange={(e) => {
-                        const valStr = e.target.value;
-                        const val = valStr === '' ? 0 : parseInt(valStr, 10);
+            const CounterInput = ({ label, value, onChange, colorClass }) => {
+                const [inputValue, setInputValue] = useState(value === 0 ? '' : value.toString());
+
+                // Actualiza el estado local del input solo si el valor de React (prop) es diferente del valor local
+                useEffect(() => {
+                    if (value.toString() !== inputValue && value.toString() !== '') {
+                        setInputValue(value === 0 ? '' : value.toString());
+                    }
+                }, [value]);
+
+                const handleChange = (e) => {
+                    const valStr = e.target.value;
+                    setInputValue(valStr); // Actualiza el estado local inmediatamente
+                    
+                    // Solo actualiza el estado global de React si el valor es numérico válido
+                    if (valStr === '') {
+                        onChange(0);
+                    } else {
+                        const val = parseInt(valStr, 10);
                         if (!isNaN(val)) {
                             onChange(val);
                         }
-                        }}
-                        onFocus={(e) => e.target.select()}
-                        className={`
-                        w-full h-14 text-2xl font-bold text-center rounded-xl border-2 transition-all outline-none focus:ring-4
-                        ${colorClass}
-                        border-slate-100 bg-slate-50 focus:bg-white focus:border-transparent focus:ring-indigo-500/10
-                        placeholder-slate-300
-                        `}
-                    />
+                    }
+                };
+
+                return (
+                    <div className="flex flex-col gap-2 w-full">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">{label}</label>
+                        <div className="relative">
+                            <input
+                                type="number"
+                                min="0"
+                                value={inputValue} // Usa el estado local para la entrada
+                                placeholder="0"
+                                onChange={handleChange}
+                                onFocus={(e) => e.target.select()}
+                                className={`
+                                w-full h-14 text-2xl font-bold text-center rounded-xl border-2 transition-all outline-none focus:ring-4
+                                ${colorClass}
+                                border-slate-100 bg-slate-50 focus:bg-white focus:border-transparent focus:ring-indigo-500/10
+                                placeholder-slate-300
+                                `}
+                            />
+                        </div>
                     </div>
-                </div>
-            );
+                );
+            };
 
             return (
                 <div className={`bg-white rounded-2xl shadow-sm border border-slate-200 transition-all duration-300 ${program.isCollapsed ? 'opacity-80' : 'opacity-100 ring-4 ring-slate-50 border-slate-300'}`}>
