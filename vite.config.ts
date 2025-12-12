@@ -8,9 +8,6 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     
-    // 1. Configuración de GitHub Pages (la ruta correcta)
-    base: '/ATRVT_26/', 
-    
     define: {
       // Definición segura para evitar errores de librerías que busquen process.env
       'process.env': {
