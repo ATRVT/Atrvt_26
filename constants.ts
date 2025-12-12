@@ -1,7 +1,7 @@
+// src/constants.ts
 import { HelpType, ReinforcerType } from './types';
 
-// ¡IMPORTANTE! Reemplaza esto con la URL NUEVA que obtengas al hacer "Nueva Implementación"
-// Asegúrate de que el acceso sea "Cualquier persona" (Anyone)
+// ¡IMPORTANTE! Aquí está tu NUEVA URL actualizada:
 export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyvA8_FjmhafrQhU3vyT3FttlNINsRUVis-t-rzNC9Wdsows1oV_u1lUtAAFYPaIcYng/exec';
 
 export const HELP_OPTIONS = [
