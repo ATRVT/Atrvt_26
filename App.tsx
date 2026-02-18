@@ -105,10 +105,34 @@ const App: React.FC = () => {
     setErrorMessage('');
 
     const finalEndTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-    const dataForSheets = { ...sessionData, endTime: finalEndTime };
+
+    // Limpiamos los datos para que coincidan EXACTAMENTE con las columnas del Google Sheet:
+    // A: Marca temporal (la pone el script)
+    // B: Fecha | C: Estudiante | D: Terapeuta
+    // E: Programa | F: OCP | G: Elementos | H: Correctas | I: Incorrectas
+    // J: Ayudas | K: Reforzador | L: Prog. Ref (Tipo + Tiempo) | M: Notas Programa | N: Observaciones Generales
+    const dataForSheets = {
+      studentName: sessionData.studentName,
+      therapistName: sessionData.therapistName,
+      date: sessionData.date,
+      generalObservations: sessionData.generalObservations,
+      programs: sessionData.programs.map(p => ({
+        name: p.name,
+        level: p.level,
+        elements: p.elements,
+        correctCount: p.correctCount,
+        incorrectCount: p.incorrectCount,
+        selectedHelp: p.selectedHelp.join(', '),
+        selectedReinforcer: p.selectedReinforcer.join(', '),
+        reinforcementSchedule: p.reinforcementSchedule + (p.reinforcementScheduleTime ? ` (${p.reinforcementScheduleTime}s)` : ''),
+        notes: p.notes,
+        // Agregamos observaciones generales a cada fila para que aparezcan en la columna N si el script las espera ahí
+        generalObservations: sessionData.generalObservations
+      }))
+    };
 
     try {
-      const result = await saveSessionToSheet(dataForSheets);
+      const result = await saveSessionToSheet(dataForSheets as any);
 
       if (result.success) {
         setSaveStatus('success');
