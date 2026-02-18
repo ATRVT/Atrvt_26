@@ -26,12 +26,12 @@ export interface ProgramData {
   correctCount: number; // UA C
   incorrectCount: number; // UA I
   // Multi-select options
-  selectedHelp: string[]; 
+  selectedHelp: string[];
   selectedReinforcer: string[];
   // Dropdown
   reinforcementSchedule: string;
   reinforcementScheduleTime: string; // New field for Interval time (seconds)
-  
+
   isCollapsed: boolean;
   notes: string;
 }
@@ -40,8 +40,8 @@ export interface SessionData {
   studentName: string;
   therapistName: string;
   date: string;
-  startTime: string; // Auto-generated
-  endTime: string;   // Auto-generated
+  startTime?: string; // Auto-generated
+  endTime?: string;   // Auto-generated
   generalObservations: string;
   programs: ProgramData[];
 }

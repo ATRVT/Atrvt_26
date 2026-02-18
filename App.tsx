@@ -69,7 +69,7 @@ const App: React.FC = () => {
     };
     setSessionData(prev => ({
       ...prev,
-      programs: [...prev.programs, newProgram] 
+      programs: [...prev.programs, newProgram]
     }));
   };
 
@@ -104,12 +104,15 @@ const App: React.FC = () => {
     setSaveStatus(null);
     setErrorMessage('');
 
-    const endTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-    const finalData = { ...sessionData, endTime };
-    
+    const finalEndTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+    // Omitimos startTime y endTime del envío a la hoja de cálculo 
+    // ya que están desplazando las columnas Programa y OCP hacia la derecha
+    const { startTime, endTime, ...dataForSheets } = { ...sessionData, endTime: finalEndTime };
+
     try {
-      const result = await saveSessionToSheet(finalData);
-      
+      const result = await saveSessionToSheet(dataForSheets);
+
       if (result.success) {
         setSaveStatus('success');
         setSessionData(prev => ({
@@ -117,7 +120,7 @@ const App: React.FC = () => {
           startTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
           endTime: '',
           generalObservations: '',
-          programs: [] 
+          programs: []
         }));
         setTimeout(() => setSaveStatus(null), 4000);
       } else {
@@ -134,16 +137,16 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-[#F8F7FF] text-slate-900 font-sans overflow-hidden selection:bg-indigo-100">
-      <Sidebar 
-        data={sessionData} 
-        onUpdate={handleUpdateSession} 
+      <Sidebar
+        data={sessionData}
+        onUpdate={handleUpdateSession}
         studentOptions={config.students}
         therapistOptions={config.therapists}
         isLoading={isConfigLoading}
         isOfflineMode={config.isFallback}
       />
 
-      <ProgramList 
+      <ProgramList
         programs={sessionData.programs}
         availablePrograms={config.programs}
         onAddProgram={handleAddProgram}
