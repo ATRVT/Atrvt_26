@@ -2,7 +2,7 @@
 import { HelpType, ReinforcerType } from './types';
 
 // ¡IMPORTANTE! Aquí está tu NUEVA URL actualizada:
-export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyvA8_FjmhafrQhU3vyT3FttlNINsRUVis-t-rzNC9Wdsows1oV_u1lUtAAFYPaIcYng/exec';
+export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcwXE6-AkZQHzKgfFSHmf64LU8uve9CHJlxwqMKE1ZEgnD9NCuO61BzcCKVO9A9n_rtQ/exec';
 
 export const HELP_OPTIONS = [
   { label: 'verbal', value: HelpType.VERBAL },
