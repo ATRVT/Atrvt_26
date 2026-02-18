@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { SessionData } from '../types';
-import { User, Calendar, FileText, Clock, ChevronDown, ChevronUp, Loader2, WifiOff, Menu, Sparkles } from 'lucide-react';
-import { generateSessionSummary } from '../services/geminiService';
+import { User, Calendar, FileText, Clock, ChevronDown, ChevronUp, Menu, WifiOff } from 'lucide-react';
 
 interface SidebarProps {
   data: SessionData;
@@ -25,12 +24,12 @@ interface InputFieldProps {
 }
 
 // Componente extraído para evitar re-renderizados innecesarios y pérdida de foco
-const InputField: React.FC<InputFieldProps> = ({ 
-  icon: Icon, 
-  label, 
-  value, 
-  onChange, 
-  type = "text", 
+const InputField: React.FC<InputFieldProps> = ({
+  icon: Icon,
+  label,
+  value,
+  onChange,
+  type = "text",
   placeholder,
   extra,
   options = [],
@@ -44,7 +43,7 @@ const InputField: React.FC<InputFieldProps> = ({
       <label className="text-xs font-bold text-slate-400 mb-1.5 flex items-center gap-2 uppercase tracking-wide group-focus-within:text-indigo-500 transition-colors">
         <Icon size={12} /> {label} {extra}
       </label>
-      
+
       <div className="relative">
         {showSelect ? (
           <div className="relative">
@@ -60,9 +59,9 @@ const InputField: React.FC<InputFieldProps> = ({
               ))}
             </select>
             {isLoading ? (
-               <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-500 animate-spin" size={14} />
+              <Loader2 size={14} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-500 animate-spin" />
             ) : (
-               <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none" size={14} />
+              <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none" size={14} />
             )}
           </div>
         ) : (
@@ -80,8 +79,11 @@ const InputField: React.FC<InputFieldProps> = ({
   );
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ 
-  data, 
+// Necesitamos importar Loader2 localmente si se usa dentro de InputField o Sidebar
+import { Loader2 } from 'lucide-react';
+
+export const Sidebar: React.FC<SidebarProps> = ({
+  data,
   onUpdate,
   studentOptions,
   therapistOptions,
@@ -89,19 +91,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isOfflineMode = false
 }) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  const handleGenerateSummary = async () => {
-    setIsGenerating(true);
-    try {
-      const summary = await generateSessionSummary(data);
-      onUpdate('generalObservations', summary);
-    } catch (error) {
-      console.error("Error generating summary:", error);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   return (
     <aside className={`
@@ -110,8 +99,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ${isMobileOpen ? 'h-auto max-h-screen' : 'h-auto'}
     `}>
       {/* Header Section */}
-      <div 
-        className="p-6 pb-4 cursor-pointer lg:cursor-default" 
+      <div
+        className="p-6 pb-4 cursor-pointer lg:cursor-default"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
       >
         <div className="flex items-center justify-between">
@@ -139,15 +128,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Mobile Summary (Visible when collapsed) */}
         {!isMobileOpen && (
           <div className="lg:hidden mt-3 flex items-center gap-3 text-xs text-slate-500 overflow-hidden">
-             <div className="flex items-center gap-1 truncate">
-                <User size={12} /> 
-                <span className="truncate">{data.studentName || 'Sin alumno'}</span>
-             </div>
-             <div className="w-px h-3 bg-slate-300"></div>
-             <div className="flex items-center gap-1 truncate">
-                <User size={12} /> 
-                <span className="truncate">{data.therapistName || 'Sin terapeuta'}</span>
-             </div>
+            <div className="flex items-center gap-1 truncate">
+              <User size={12} />
+              <span className="truncate">{data.studentName || 'Sin alumno'}</span>
+            </div>
+            <div className="w-px h-3 bg-slate-300"></div>
+            <div className="flex items-center gap-1 truncate">
+              <User size={12} />
+              <span className="truncate">{data.therapistName || 'Sin terapeuta'}</span>
+            </div>
           </div>
         )}
       </div>
@@ -158,38 +147,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ${isMobileOpen ? 'max-h-[80vh] opacity-100' : 'max-h-0 opacity-0 lg:max-h-full lg:opacity-100'}
       `}>
         <div className="flex-1 overflow-y-auto px-6 space-y-8 pb-4">
-          
+
           {/* Context Group */}
           <div className="space-y-5">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Contexto</span>
             </div>
-            
-            <InputField 
-              icon={User} 
-              label="Estudiante" 
-              value={data.studentName} 
+
+            <InputField
+              icon={User}
+              label="Estudiante"
+              value={data.studentName}
               onChange={(e) => onUpdate('studentName', e.target.value)}
               placeholder="Seleccionar alumno..."
               options={studentOptions}
               isLoading={isLoading}
             />
 
-            <InputField 
-              icon={User} 
-              label="Terapeuta" 
-              value={data.therapistName} 
+            <InputField
+              icon={User}
+              label="Terapeuta"
+              value={data.therapistName}
               onChange={(e) => onUpdate('therapistName', e.target.value)}
               placeholder="Seleccionar terapeuta..."
               options={therapistOptions}
               isLoading={isLoading}
             />
 
-            <InputField 
-              icon={Calendar} 
-              label="Fecha" 
+            <InputField
+              icon={Calendar}
+              label="Fecha"
               type="date"
-              value={data.date} 
+              value={data.date}
               onChange={(e) => onUpdate('date', e.target.value)}
               extra={
                 <span className="ml-auto flex items-center gap-1 text-[10px] text-slate-500 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded-md font-medium">
@@ -203,24 +192,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Observations Sticky Footer */}
         <div className="p-5 bg-white border-t border-slate-100 space-y-3 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
           <div className="flex justify-between items-center mb-1">
-              <label className="text-xs font-bold text-slate-400 flex items-center gap-2 uppercase tracking-wide">
-                <FileText size={12} /> Notas / Resumen
-              </label>
-              <button 
-                onClick={handleGenerateSummary}
-                disabled={isGenerating}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-md text-[10px] font-bold uppercase tracking-wider transition-colors disabled:opacity-50 disabled:cursor-wait"
-                title="Generar resumen automático con IA"
-              >
-                {isGenerating ? (
-                  <Loader2 size={12} className="animate-spin" />
-                ) : (
-                  <Sparkles size={12} />
-                )}
-                {isGenerating ? 'Generando...' : 'Auto-Resumen'}
-              </button>
+            <label className="text-xs font-bold text-slate-400 flex items-center gap-2 uppercase tracking-wide">
+              <FileText size={12} /> Notas / Resumen
+            </label>
           </div>
-        
+
           <textarea
             value={data.generalObservations}
             onChange={(e) => onUpdate('generalObservations', e.target.value)}

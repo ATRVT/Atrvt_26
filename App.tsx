@@ -105,10 +105,7 @@ const App: React.FC = () => {
     setErrorMessage('');
 
     const finalEndTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-
-    // Omitimos startTime y endTime del envío a la hoja de cálculo 
-    // ya que están desplazando las columnas Programa y OCP hacia la derecha
-    const { startTime, endTime, ...dataForSheets } = { ...sessionData, endTime: finalEndTime };
+    const dataForSheets = { ...sessionData, endTime: finalEndTime };
 
     try {
       const result = await saveSessionToSheet(dataForSheets);
