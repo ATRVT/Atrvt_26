@@ -116,7 +116,6 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, onUpdate, onR
                     value={program.elements}
                     onChange={(e) => onUpdate(program.id, { elements: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all placeholder-slate-400 text-slate-800"
-                    placeholder="Ej. Manzana"
                   />
                 </div>
               </div>
