@@ -106,16 +106,17 @@ export const ProgramCard: React.FC<ProgramCardProps> = ({ program, onUpdate, onR
                     value={program.level}
                     onChange={(e) => onUpdate(program.id, { level: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all placeholder-slate-400 text-slate-800"
-                    placeholder="Ej. A1"
+                    placeholder="ID / Nivel"
                   />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Elementos</label>
                   <input
-                    type="text"
+                    type="number"
                     value={program.elements}
                     onChange={(e) => onUpdate(program.id, { elements: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all placeholder-slate-400 text-slate-800"
+                    placeholder="0"
                   />
                 </div>
               </div>
